@@ -1,5 +1,6 @@
 -- extension to implement trigrams;
 CREATE EXTENSION pg_trgm;
+CREATE EXTENSION btree_gin; -- для составного индекса по formalname и aolevel
 
 
 -- drop irrelevant data
@@ -42,8 +43,10 @@ CREATE INDEX formalname_idx ON addrobj USING btree (formalname);
 CREATE INDEX offname_idx ON addrobj USING btree (offname);
 CREATE INDEX shortname_idx ON addrobj USING btree (shortname);
 CREATE INDEX shortname_aolevel_idx ON addrobj USING btree (shortname, aolevel);
+CREATE INDEX aoguid_currstatus_idx ON addrobj USING btree (aoguid, currstatus);
 
 
 -- trigram indexes to speed up text searches
 CREATE INDEX formalname_trgm_idx on addrobj USING gin (formalname gin_trgm_ops);
 CREATE INDEX offname_trgm_idx on addrobj USING gin (offname gin_trgm_ops);
+CREATE INDEX formalname_trgm_aolevel_idx on addrobj USING gin (formalname gin_trgm_ops, aolevel);
